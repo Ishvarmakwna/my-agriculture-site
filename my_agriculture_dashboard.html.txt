@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="gu" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ભારતીય કૃષિ ઇન્ટરેક્ટિવ ડેશબોર્ડ</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Baloo+Bhai+2:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- 
+    Chosen Palette: Calm Harmony
+    Application Structure Plan: A tab-based navigation SPA. The structure is designed for intuitive exploration, not mirroring the linear slide format. It includes: 1) 'ઝાંખી' (Overview) with key stats and crop info, 2) 'ડેટા અને આંકડા' (Data & Stats) with interactive charts for GDP and production, 3) 'પડકારો અને ઉકેલો' (Challenges & Solutions) with an interactive system linking problems to government initiatives, and 4) 'ભવિષ્યની દિશા' (Future Direction) showcasing innovations. This user-centric flow allows for non-linear discovery and better synthesis of information.
+    Visualization & Content Choices: Report info is transformed into interactive elements: Key stats become animated counters. GDP data becomes a dynamic Doughnut chart (Chart.js). Crop info is presented in interactive cards. The core interaction is linking 'Challenges' to 'Solutions' via a JS-powered tab system, directly showing cause-and-effect. 'Future Innovations' are shown in a visually engaging flow diagram made with HTML/Tailwind. This approach prioritizes user engagement and understanding over static text.
+    CONFIRMATION: NO SVG graphics used. NO Mermaid JS used.
+    -->
+    <style>
+        body {
+            font-family: 'Baloo Bhai 2', cursive;
+            background-color: #F8F4E8;
+            color: #4A4A4A;
+        }
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 350px;
+            }
+        }
+        .nav-link {
+            transition: all 0.3s ease;
+            border-bottom: 3px solid transparent;
+        }
+        .nav-link.active,
+        .nav-link:hover {
+            border-bottom-color: #4A6A52;
+            color: #4A6A52;
+        }
+        .challenge-item.active {
+            background-color: #D4A373;
+            color: white;
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header and Navigation -->
+    <header class="bg-[#F8F4E8] sticky top-0 z-50 shadow-md">
+        <div class="container mx-auto px-6 py-4">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <h1 class="text-3xl font-bold text-[#4A6A52]">ભારતીય કૃષિ: એક ઇન્ટરેક્ટિવ સફર</h1>
+                <nav id="main-nav" class="flex flex-wrap justify-center space-x-4 md:space-x-6 mt-4 md:mt-0 font-semibold text-lg">
+                    <a href="#overview" class="nav-link active p-2">ઝાંખી</a>
+                    <a href="#stats" class="nav-link p-2">ડેટા અને આંકડા</a>
+                    <a href="#challenges" class="nav-link p-2">પડકારો અને ઉકેલો</a>
+                    <a href="#future" class="nav-link p-2">ભવિષ્યની દિશા</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-6 py-12">
+
+        <!-- Section 1: Overview (ઝાંખી) -->
+        <section id="overview" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-8 text-[#4A6A52]">ખેતીનું મહત્વ અને મુખ્ય પાકો</h2>
+            <p class="text-center max-w-3xl mx-auto text-xl mb-12">
+                ભારતીય કૃષિ ક્ષેત્ર દેશના અર્થતંત્રનો પાયો છે, જે કરોડો લોકો માટે આજીવિકાનો સ્ત્રોત છે અને રાષ્ટ્રની ખાદ્ય સુરક્ષા સુનિશ્ચિત કરે છે. ચાલો આપણે તેની મુખ્ય વિશેષતાઓ અને પાકો પર એક નજર કરીએ.
+            </p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-center mb-12">
+                <div class="bg-white p-6 rounded-2xl shadow-lg transition-transform hover:scale-105">
+                    <div class="text-5xl font-bold text-[#D4A373]">60%+</div>
+                    <p class="mt-2 text-lg font-semibold">વસ્તી માટે આજીવિકા</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg transition-transform hover:scale-105">
+                    <div class="text-5xl font-bold text-[#D4A373]">18-20%</div>
+                    <p class="mt-2 text-lg font-semibold">જીડીપીમાં ફાળો</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg transition-transform hover:scale-105">
+                    <span class="text-5xl font-bold text-[#D4A373]">🌾</span>
+                    <p class="mt-2 text-lg font-semibold">ખાદ્ય સુરક્ષાનો આધાર</p>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-lg transition-transform hover:scale-105">
+                    <span class="text-5xl font-bold text-[#D4A373]">🏭</span>
+                    <p class="mt-2 text-lg font-semibold">ઉદ્યોગો માટે કાચો માલ</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold text-center text-[#4A6A52] mb-4">ખરીફ પાકો (ચોમાસુ)</h3>
+                    <p class="text-center text-sm mb-4">જૂન-જુલાઈમાં વાવણી, સપ્ટેમ્બર-ઓક્ટોબરમાં લણણી.</p>
+                    <ul class="text-center space-y-2 text-lg">
+                        <li>ડાંગર (ચોખા)</li>
+                        <li>મકાઈ</li>
+                        <li>કપાસ</li>
+                        <li>શેરડી</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold text-center text-[#4A6A52] mb-4">રવિ પાકો (શિયાળુ)</h3>
+                    <p class="text-center text-sm mb-4">ઓક્ટોબર-નવેમ્બરમાં વાવણી, માર્ચ-એપ્રિલમાં લણણી.</p>
+                    <ul class="text-center space-y-2 text-lg">
+                        <li>ઘઉં</li>
+                        <li>જવ</li>
+                        <li>સરસવ</li>
+                        <li>ચણા</li>
+                    </ul>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold text-center text-[#4A6A52] mb-4">રોકડિયા પાકો</h3>
+                    <p class="text-center text-sm mb-4">આર્થિક લાભ માટે ઉગાડવામાં આવતા પાકો.</p>
+                    <ul class="text-center space-y-2 text-lg">
+                        <li>તમાકુ</li>
+                        <li>મસાલા</li>
+                        <li>બટાકા</li>
+                        <li>ડુંગળી</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Data & Stats (ડેટા અને આંકડા) -->
+        <section id="stats" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-8 text-[#4A6A52]">ડેટા અને આંકડાકીય વિશ્લેષણ</h2>
+             <p class="text-center max-w-3xl mx-auto text-xl mb-12">
+                આંકડા આપણને કૃષિ ક્ષેત્રના આર્થિક મહત્વ અને ઉત્પાદનની માત્રાને વધુ સારી રીતે સમજવામાં મદદ કરે છે. નીચેના ચાર્ટ્સ જીડીપીમાં ફાળો અને મુખ્ય પાકોના ઉત્પાદનની તુલના દર્શાવે છે.
+            </p>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div class="bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold text-center mb-4">જીડીપીમાં વિવિધ ક્ષેત્રોનો ફાળો (%)</h3>
+                    <div class="chart-container">
+                        <canvas id="gdpChart"></canvas>
+                    </div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-xl">
+                    <h3 class="text-2xl font-bold text-center mb-4">મુખ્ય પાકોનું ઉત્પાદન (લાખ ટનમાં)</h3>
+                     <div class="chart-container">
+                        <canvas id="productionChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 3: Challenges & Solutions (પડકારો અને ઉકેલો) -->
+        <section id="challenges" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-8 text-[#4A6A52]">પડકારો અને સરકારી ઉકેલો</h2>
+            <p class="text-center max-w-3xl mx-auto text-xl mb-12">
+                ભારતીય કૃષિ અનેક પડકારોનો સામનો કરે છે. અહીં, તમે દરેક પડકાર પર ક્લિક કરીને તેના સંબંધિત સરકારી ઉકેલો અને યોજનાઓ વિશે જાણી શકો છો.
+            </p>
+            <div class="flex flex-col md:flex-row gap-8">
+                <div id="challenge-list" class="w-full md:w-1/3 space-y-3">
+                    <!-- Challenges will be populated by JS -->
+                </div>
+                <div class="w-full md:w-2/3 bg-white p-8 rounded-2xl shadow-xl">
+                    <div id="solution-content">
+                        <!-- Solution content will be populated by JS -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 4: Future Direction (ભવિષ્યની દિશા) -->
+        <section id="future" class="mb-16">
+            <h2 class="text-4xl font-bold text-center mb-8 text-[#4A6A52]">કૃષિનું ભવિષ્ય: નવીનતાઓ અને વિકાસ</h2>
+            <p class="text-center max-w-3xl mx-auto text-xl mb-12">
+                ટકાઉ અને નફાકારક ભવિષ્ય માટે ભારતીય કૃષિ ક્ષેત્ર નવીનતા અને ટેકનોલોજી તરફ આગળ વધી રહ્યું છે. આ પ્રગતિના મુખ્ય સ્તંભો નીચે મુજબ છે.
+            </p>
+            <div class="relative">
+                <!-- The connecting line -->
+                <div class="absolute left-1/2 top-0 h-full w-1 bg-gray-300 hidden md:block"></div>
+                
+                <div class="space-y-12">
+                    <!-- Item 1 -->
+                    <div class="md:flex items-center md:space-x-8 relative">
+                        <div class="md:w-1/2"></div>
+                        <div class="md:w-1/2 bg-white p-6 rounded-2xl shadow-xl transition-transform hover:scale-105">
+                            <h3 class="text-2xl font-bold text-[#4A6A52]">ડિજિટલ કૃષિ</h3>
+                            <p>સેન્સર, ડ્રોન અને AI નો ઉપયોગ કરીને પાકનું ચોક્કસ વ્યવસ્થાપન અને દેખરેખ.</p>
+                        </div>
+                    </div>
+                    <!-- Item 2 -->
+                    <div class="md:flex flex-row-reverse items-center md:space-x-8 md:space-x-reverse relative">
+                        <div class="md:w-1/2"></div>
+                        <div class="md:w-1/2 bg-white p-6 rounded-2xl shadow-xl transition-transform hover:scale-105">
+                             <h3 class="text-2xl font-bold text-[#4A6A52]">સ્માર્ટ સિંચાઈ</h3>
+                            <p>'પ્રતિ બુંદ, વધુ પાક' ના લક્ષ્ય સાથે પાણીનો કાર્યક્ષમ ઉપયોગ કરવા માટે ઓટોમેટેડ સિસ્ટમ્સ.</p>
+                        </div>
+                    </div>
+                     <!-- Item 3 -->
+                    <div class="md:flex items-center md:space-x-8 relative">
+                        <div class="md:w-1/2"></div>
+                        <div class="md:w-1/2 bg-white p-6 rounded-2xl shadow-xl transition-transform hover:scale-105">
+                            <h3 class="text-2xl font-bold text-[#4A6A52]">ઓર્ગેનિક અને ટકાઉ ખેતી</h3>
+                            <p>પર્યાવરણને અનુકૂળ અને રાસાયણિક મુક્ત ખેતી પદ્ધતિઓ અપનાવીને જમીનની તંદુરસ્તી જાળવવી.</p>
+                        </div>
+                    </div>
+                     <!-- Item 4 -->
+                    <div class="md:flex flex-row-reverse items-center md:space-x-8 md:space-x-reverse relative">
+                        <div class="md:w-1/2"></div>
+                        <div class="md:w-1/2 bg-white p-6 rounded-2xl shadow-xl transition-transform hover:scale-105">
+                             <h3 class="text-2xl font-bold text-[#4A6A52]">કૃષિ-આધારિત ઉદ્યોગો</h3>
+                            <p>ખેત ઉત્પાદનોના ફૂડ પ્રોસેસિંગ અને મૂલ્યવર્ધન દ્વારા ખેડૂતોની આવકમાં વધારો કરવો.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-[#4A6A52] text-white text-center p-6">
+        <p>&copy; 2025 ભારતીય કૃષિ ઇન્ટરેક્ટિવ ડેશબોર્ડ. માહિતીના હેતુ માટે બનાવવામાં આવેલ છે.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Chart.js Data and Configuration
+            const gdpData = {
+                labels: ['કૃષિ (18%)', 'ઉદ્યોગ (28%)', 'સેવા (54%)'],
+                datasets: [{
+                    label: 'જીડીપીમાં ફાળો',
+                    data: [18, 28, 54],
+                    backgroundColor: ['#4A6A52', '#D4A373', '#A8B8A0'],
+                    hoverOffset: 4
+                }]
+            };
+
+            const productionData = {
+                labels: ['ચોખા', 'ઘઉં', 'મકાઈ', 'કઠોળ', 'તેલીબિયાં'],
+                datasets: [{
+                    label: 'ઉત્પાદન (લાખ ટનમાં)',
+                    data: [1320, 1150, 365, 290, 415],
+                    backgroundColor: '#4A6A52',
+                    borderColor: '#D4A373',
+                    borderWidth: 2,
+                    borderRadius: 5
+                }]
+            };
+
+            new Chart(document.getElementById('gdpChart'), {
+                type: 'doughnut',
+                data: gdpData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { position: 'top' } }
+                }
+            });
+
+            new Chart(document.getElementById('productionChart'), {
+                type: 'bar',
+                data: productionData,
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Challenges and Solutions Data
+            const challengesData = [
+                {
+                    challenge: 'મોસમી અનિશ્ચિતતા',
+                    solutionTitle: 'પ્રધાનમંત્રી ફસલ બીમા યોજના (PMFBY)',
+                    solutionText: 'કુદરતી આફતો, જીવાતો અને રોગોને કારણે પાકને થતા નુકસાન સામે ખેડૂતોને વ્યાપક વીમા કવચ પૂરું પાડે છે.'
+                },
+                {
+                    challenge: 'સિંચાઈ સુવિધાઓનો અભાવ',
+                    solutionTitle: 'પ્રધાનમંત્રી કૃષિ સિંચાઈ યોજના (PMKSY)',
+                    solutionText: "'હર ખેત કો પાની' ના ઉદ્દેશ્ય સાથે સિંચાઈ સુવિધાઓનો વિસ્તાર કરવો અને 'પ્રતિ બુંદ, વધુ પાક' માટે પાણીનો કાર્યક્ષમ ઉપયોગ સુનિશ્ચિત કરવો."
+                },
+                {
+                    challenge: 'બજારની પહોંચ અને ભાવનો અભાવ',
+                    solutionTitle: 'ઈ-નામ (e-NAM)',
+                    solutionText: 'એક ઓનલાઈન કૃષિ બજાર પ્લેટફોર્મ જે ખેડૂતોને તેમના ઉત્પાદનો માટે વધુ સારા ભાવ મેળવવામાં મદદ કરે છે અને બજારમાં પારદર્શિતા વધારે છે.'
+                },
+                {
+                    challenge: 'ખેડૂતો પર દેવાનો બોજ',
+                    solutionTitle: 'કિસાન ક્રેડિટ કાર્ડ (KCC) અને PM-KISAN',
+                    solutionText: 'KCC દ્વારા ખેડૂતોને સરળ અને સસ્તી લોન પૂરી પાડવામાં આવે છે, જ્યારે PM-KISAN દ્વારા દર વર્ષે ₹6,000 ની સીધી આવક સહાય આપવામાં આવે છે.'
+                },
+                {
+                    challenge: 'જમીનની ફળદ્રુપતામાં ઘટાડો',
+                    solutionTitle: 'સોઈલ હેલ્થ કાર્ડ યોજના',
+                    solutionText: 'ખેડૂતોને તેમની જમીનની ફળદ્રુપતા અને પોષક તત્વો વિશે માહિતી આપવા માટે સોઈલ હેલ્થ કાર્ડ આપવામાં આવે છે, જેથી તેઓ યોગ્ય ખાતરોનો ઉપયોગ કરી શકે.'
+                },
+            ];
+
+            const challengeList = document.getElementById('challenge-list');
+            const solutionContent = document.getElementById('solution-content');
+
+            challengesData.forEach((item, index) => {
+                const button = document.createElement('button');
+                button.className = 'w-full text-left p-4 rounded-lg bg-gray-100 hover:bg-gray-200 transition challenge-item';
+                button.textContent = item.challenge;
+                button.dataset.index = index;
+                if (index === 0) {
+                    button.classList.add('active');
+                }
+                challengeList.appendChild(button);
+            });
+            
+            function updateSolution(index) {
+                const data = challengesData[index];
+                solutionContent.innerHTML = `
+                    <h3 class="text-3xl font-bold text-[#4A6A52] mb-4">${data.solutionTitle}</h3>
+                    <p class="text-xl">${data.solutionText}</p>
+                `;
+                
+                document.querySelectorAll('.challenge-item').forEach(btn => {
+                    btn.classList.remove('active');
+                    if(btn.dataset.index == index) {
+                        btn.classList.add('active');
+                    }
+                });
+            }
+
+            challengeList.addEventListener('click', function (e) {
+                if (e.target && e.target.matches('button.challenge-item')) {
+                    updateSolution(e.target.dataset.index);
+                }
+            });
+
+            // Initial load
+            updateSolution(0);
+            
+            // Navigation scroll highlighting
+            const sections = document.querySelectorAll('section');
+            const navLinks = document.querySelectorAll('#main-nav a');
+
+            window.addEventListener('scroll', () => {
+                let current = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (pageYOffset >= sectionTop - 60) {
+                        current = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').includes(current)) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
